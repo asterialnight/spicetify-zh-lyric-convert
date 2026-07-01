@@ -1,4 +1,4 @@
-# spicetify Traditional to Simplified Chinese lyric conversion
+# Spicetify Traditional to Simplified Chinese lyric conversion
 
 A Spicetify extension that converts Traditional Chinese to Simplified Chinese in the Spotify desktop app.
 
