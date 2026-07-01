@@ -1,0 +1,25 @@
+{
+  "name": "zh-lyrics-convert",
+  "version": "1.0.0",
+  "description": "A Spicetify extension that converts Traditional Chinese to Simplified Chinese in the Spotify desktop app.",
+  "main": "zh-convert.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asterialnight/spicetify-zh-convert.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/asterialnight/spicetify-zh-convert/issues"
+  },
+  "homepage": "https://github.com/asterialnight/spicetify-zh-convert#readme",
+  "dependencies": {
+    "esbuild": "^0.28.1",
+    "opencc-js": "^1.3.2"
+  }
+}
