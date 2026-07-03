@@ -14,12 +14,12 @@ function isLyrics(el: Element): boolean {
   return !!el.closest('[class*="lyric"],[class*="lyrics"],[data-testid*="lyric"]');
 }
 
-function isSearch(el: Element): boolean {
-  return !!el.closest('[data-testid*="search"], [class*="search"], [class*="Search"], input, textarea');
+function isSearchContainer(el: Element): boolean {
+  return !!el.closest('[data-testid="playlist-tracklist-search-input-container"], [data-testid="search-input"], [class*="SearchInputContainer"], [class*="filterRow"]');
 }
 
 function convertElement(el: Element): void {
-  if (isSearch(el)) return;
+  if (isSearchContainer(el)) return;
   if (el.children.length === 0 && el.textContent?.trim()) {
     if (isLyrics(el) || !keepMetadata) {
       const converted = convert(el.textContent);
@@ -48,8 +48,10 @@ const observer = new MutationObserver((mutations) => {
   if (addedNodes.length === 0) return;
   observer.disconnect();
   addedNodes.forEach(node => {
-    convertElement(node);
-    convertAll(node);
+    if (!isSearchContainer(node)) {
+      convertElement(node);
+      convertAll(node);
+    }
   });
   observer.observe(document.body, { childList: true, subtree: true });
 });
@@ -122,7 +124,7 @@ async function waitForSpicetify(): Promise<void> {
   }
 
   const dropdown = createDropdown();
-  const icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><text x="2" y="18" font-size="18" fill="currentColor" font-family="sans-serif">文</text></svg>`;
+  const icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><text x="12" y="18" font-size="18" fill="currentColor" font-family="sans-serif" text-anchor="middle">文</text></svg>`;
   const btn = new (Spicetify as any).Topbar.Button('中文转换', icon, () => {}, false);
 
   setTimeout(() => {
