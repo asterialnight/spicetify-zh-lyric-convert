@@ -52,10 +52,9 @@ Click the 文 button in the top bar to open settings. Toggle "保留歌手/专�
 
 ## Known Issues
 
-- Typing Chinese characters into playlist search may cause Spotify to crash. This is a known bug being investigated.
 - Some content may require a page reload after toggling the setting.
-- Characters that are identical in both Traditional and Simplified will not visually change.
 
 ## Notes
 
+Characters that are identical in both Traditional and Simplified will not visually change.
 After running `./build.sh`, the extension is baked into Spotify and runs automatically every time Spotify opens. You do not need to keep the terminal open.
