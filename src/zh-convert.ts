@@ -9,19 +9,16 @@ function convert(text: string): string {
 
 const SETTINGS_KEY = 'zh-convert-keep-metadata';
 let keepMetadata = Spicetify.LocalStorage.get(SETTINGS_KEY) === 'true';
-let isTyping = false;
-let typingTimer: ReturnType<typeof setTimeout> | null = null;
 
 function isLyrics(el: Element): boolean {
   return !!el.closest('[class*="lyric"],[class*="lyrics"],[data-testid*="lyric"]');
 }
 
-function convertElement(el: Element): void {
+function convertElement(el: Element, lyricsOnly: boolean = false): void {
   if (el.children.length === 0 && el.textContent?.trim()) {
     const inLyrics = isLyrics(el);
+    if (lyricsOnly && !inLyrics) return;
     if (inLyrics || !keepMetadata) {
-      // if globally converting and user is typing, skip non-lyrics elements
-      if (!keepMetadata && !inLyrics && isTyping) return;
       const converted = convert(el.textContent);
       if (converted !== el.textContent) {
         el.textContent = converted;
@@ -30,11 +27,13 @@ function convertElement(el: Element): void {
   }
 }
 
-function convertAll(root: Element): void {
+function convertAll(root: Element, lyricsOnly: boolean = false): void {
   observer.disconnect();
-  root.querySelectorAll('*').forEach(el => convertElement(el));
+  root.querySelectorAll('*').forEach(el => convertElement(el, lyricsOnly));
   observer.observe(document.body, { childList: true, subtree: true });
 }
+
+let settleTimer: ReturnType<typeof setTimeout> | null = null;
 
 const observer = new MutationObserver((mutations) => {
   const addedNodes: Element[] = [];
@@ -45,21 +44,22 @@ const observer = new MutationObserver((mutations) => {
       }
     }
   }
-  if (addedNodes.length === 0) return;
+
+  // Always convert lyrics immediately even during heavy mutations
   observer.disconnect();
   addedNodes.forEach(node => {
-    convertElement(node);
-    convertAll(node);
+    convertElement(node, true);
+    node.querySelectorAll('*').forEach(el => convertElement(el, true));
   });
   observer.observe(document.body, { childList: true, subtree: true });
-});
 
-document.addEventListener('keydown', () => {
-  isTyping = true;
-  if (typingTimer) clearTimeout(typingTimer);
-  typingTimer = setTimeout(() => {
-    isTyping = false;
-  }, 800);
+  // Debounce global conversion -- only run after mutations settle
+  if (!keepMetadata) {
+    if (settleTimer) clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => {
+      convertAll(document.body, false);
+    }, 1500);
+  }
 });
 
 observer.observe(document.body, { childList: true, subtree: true });
