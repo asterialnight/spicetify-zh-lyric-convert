@@ -56,5 +56,5 @@ Click the 文 button in the top bar to open settings. Toggle "保留歌手/专�
 
 ## Notes
 
-Characters that are identical in both Traditional and Simplified will not visually change.
-After running `./build.sh`, the extension is baked into Spotify and runs automatically every time Spotify opens. You do not need to keep the terminal open.
+ - Characters that are identical in both Traditional and Simplified will not visually change.
+ - After running `./build.sh`, the extension is baked into Spotify and runs automatically every time Spotify opens. You do not need to keep the terminal open.
